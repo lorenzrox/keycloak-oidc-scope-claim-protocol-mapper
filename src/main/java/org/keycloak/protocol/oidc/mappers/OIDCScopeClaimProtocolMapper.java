@@ -70,7 +70,7 @@ public class OIDCScopeClaimProtocolMapper extends AbstractOIDCProtocolMapper
     @Override
     protected void setClaim(IDToken idToken, ProtocolMapperModel mappingModel,
             UserSessionModel userSession, KeycloakSession keycloakSession, ClientSessionContext clientSessionCtx) {
-        String claimValue = getClaimvalue(mappingModel, userSession, clientSessionCtx);
+        String claimValue = getClaimValue(mappingModel, userSession, clientSessionCtx);
         if (claimValue != null) {
             OIDCAttributeMapperHelper.mapClaim(idToken, mappingModel, claimValue);
         }
@@ -80,13 +80,13 @@ public class OIDCScopeClaimProtocolMapper extends AbstractOIDCProtocolMapper
     protected void setClaim(AccessTokenResponse accessTokenResponse, ProtocolMapperModel mappingModel,
             UserSessionModel userSession, KeycloakSession keycloakSession,
             ClientSessionContext clientSessionCtx) {
-        String claimValue = getClaimvalue(mappingModel, userSession, clientSessionCtx);
+        String claimValue = getClaimValue(mappingModel, userSession, clientSessionCtx);
         if (claimValue != null) {
             OIDCAttributeMapperHelper.mapClaim(accessTokenResponse, mappingModel, claimValue);
         }
     }
 
-    private static String getClaimvalue(ProtocolMapperModel mappingModel, UserSessionModel userSession,
+    private static String getClaimValue(ProtocolMapperModel mappingModel, UserSessionModel userSession,
             ClientSessionContext clientSessionCtx) {
         AuthorizationRequestContext authorizationRequestContext = clientSessionCtx.getAuthorizationRequestContext();
 
