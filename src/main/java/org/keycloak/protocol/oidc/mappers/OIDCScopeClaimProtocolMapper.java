@@ -6,12 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.keycloak.models.ClientSessionContext;
+import org.keycloak.models.GroupModel;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.ProtocolMapperModel;
 import org.keycloak.models.UserSessionModel;
+import org.keycloak.models.utils.ModelToRepresentation;
 import org.keycloak.protocol.oidc.OIDCLoginProtocol;
 import org.keycloak.provider.ProviderConfigProperty;
 import org.keycloak.rar.AuthorizationRequestContext;
+import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.IDToken;
 
 public class OIDCScopeClaimProtocolMapper extends AbstractOIDCProtocolMapper
@@ -67,21 +70,35 @@ public class OIDCScopeClaimProtocolMapper extends AbstractOIDCProtocolMapper
     @Override
     protected void setClaim(IDToken idToken, ProtocolMapperModel mappingModel,
             UserSessionModel userSession, KeycloakSession keycloakSession, ClientSessionContext clientSessionCtx) {
-        AuthorizationRequestContext authorizationRequestContext = clientSessionCtx.getAuthorizationRequestContext();
-
-        String scopeName = mappingModel.getConfig().get(SCOPE);
-        String claimValue = authorizationRequestContext.getAuthorizationDetailEntries()
-                .stream()
-                .filter(d -> d.getClientScope().getName().equals(scopeName))
-                .map(d -> d.getDynamicScopeParam())
-                .findFirst().orElse(null);
-
+        String claimValue = getClaimvalue(mappingModel, userSession, clientSessionCtx);
         if (claimValue != null) {
             OIDCAttributeMapperHelper.mapClaim(idToken, mappingModel, claimValue);
         }
     }
 
-    public static ProtocolMapperModel create(String name,
+    @Override
+    protected void setClaim(AccessTokenResponse accessTokenResponse, ProtocolMapperModel mappingModel,
+            UserSessionModel userSession, KeycloakSession keycloakSession,
+            ClientSessionContext clientSessionCtx) {
+        String claimValue = getClaimvalue(mappingModel, userSession, clientSessionCtx);
+        if (claimValue != null) {
+            OIDCAttributeMapperHelper.mapClaim(accessTokenResponse, mappingModel, claimValue);
+        }
+    }
+
+    private static String getClaimvalue(ProtocolMapperModel mappingModel, UserSessionModel userSession,
+            ClientSessionContext clientSessionCtx) {
+        AuthorizationRequestContext authorizationRequestContext = clientSessionCtx.getAuthorizationRequestContext();
+
+        String scopeName = mappingModel.getConfig().get(SCOPE);
+        return authorizationRequestContext.getAuthorizationDetailEntries()
+                .stream()
+                .filter(d -> d.getClientScope().getName().equals(scopeName))
+                .map(d -> d.getDynamicScopeParam())
+                .findFirst().orElse(null);
+    }
+
+    public static ProtocolMapperModel createClaimMapper(String name,
             String tokenClaimName,
             boolean consentRequired, String consentText,
             boolean accessToken, boolean idToken) {
