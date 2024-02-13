@@ -1,2 +1,2 @@
 
-org.keycloak.protocol.oidc.mappers.OIDCScopeGroupProtocolMapper
+org.keycloak.protocol.oidc.mappers.OIDCScopeClaimProtocolMapper
