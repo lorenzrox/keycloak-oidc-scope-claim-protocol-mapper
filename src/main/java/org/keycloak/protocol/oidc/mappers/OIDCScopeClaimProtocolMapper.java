@@ -21,9 +21,6 @@ public class OIDCScopeClaimProtocolMapper extends AbstractOIDCProtocolMapper
 
     private static final String SCOPE = "scope";
 
-    private static final String SCOPE_LABEL = "oidc-scope-claim-protocol-mapper.scope.label";
-    private static final String SCOPE_HELP_TEXT = "oidc-scope-claim-protocol-mapper.scope.tooltip";
-
     public static final String PROVIDER_ID = "oidc-scope-claim-protocol-mapper";
 
     static {
@@ -31,10 +28,10 @@ public class OIDCScopeClaimProtocolMapper extends AbstractOIDCProtocolMapper
 
         ProviderConfigProperty scopeProperty = new ProviderConfigProperty();
         scopeProperty.setName(SCOPE);
-        scopeProperty.setLabel(SCOPE_LABEL);
+        scopeProperty.setLabel("Scope name");
         scopeProperty.setRequired(true);
         scopeProperty.setType(ProviderConfigProperty.STRING_TYPE);
-        scopeProperty.setHelpText(SCOPE_HELP_TEXT);
+        scopeProperty.setHelpText("Name of dynamic scope, which will be used populate the claim value");
 
         configProperties.add(scopeProperty);
 
